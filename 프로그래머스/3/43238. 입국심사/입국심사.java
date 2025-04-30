@@ -13,6 +13,7 @@ class Solution {
             // 탐색 인원
             long person = 0;
             
+            // 시간 안에 모든 심사관이 n명을 처리할 수 있는지 확인
             for (int time: times) {
                 person += mid / time;
                 
@@ -21,6 +22,7 @@ class Solution {
                 }
             }
             
+            // mid 값 조정
             if (person >= n) {
                 answer = mid;
                 max = mid - 1;
