@@ -38,12 +38,8 @@ class Solution {
             return;
         }
         
-        for (int i = 0; i < words.length; i++) {
-            if (visited[i]) {
-                continue;
-            }
-            
-            if (canChange(begin, words[i])) {
+        for (int i = 0; i < words.length; i++) { 
+            if (!visited[i] && canChange(begin, words[i])) {
                 visited[i] = true;
                 dfs(words[i], target, words, cnt+1);
                 visited[i] = false;
