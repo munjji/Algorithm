@@ -2,79 +2,82 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int n;
-    static char[][] normal;
-    static char[][] blind;
+
+    static int N;
+    static char[][] map;
+    static char[][] rgbMap;
     static boolean[][] visited;
-    static final int[] dx = {1, -1, 0, 0};
-    static final int[] dy = {0, 0, -1, 1};
+    static int[] dx = {1, -1, 0, 0};
+    static int[] dy = {0, 0, 1, -1};
+    static int origin, rgb = 0;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        n = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
 
-        normal = new char[n][n];
-        blind  = new char[n][n];
-
-        for (int i = 0; i < n; i++) {
+        map = new char[N][N];
+        rgbMap = new char[N][N];
+        for (int i = 0; i < N; i++) {
             String line = br.readLine().trim();
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < N; j++) {
                 char c = line.charAt(j);
-                normal[i][j] = c;
-                blind[i][j] = (c == 'G') ? 'R' : c;
+                map[i][j] = c;
+                rgbMap[i][j] = (c == 'G') ? 'R' : c;
             }
         }
 
-        // 일반 시야
-        visited = new boolean[n][n];
-        int normalCount = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+        // 일반인
+        visited = new boolean[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
                 if (!visited[i][j]) {
-                    bfs(i, j, normal);
-                    normalCount++;
+                    if (map[i][j] == 'R') bfs(i, j, 'R', map);
+                    else if (map[i][j] == 'G') bfs(i, j, 'G', map);
+                    else bfs(i, j, 'B', map);
+                    origin++;
                 }
             }
         }
 
-        // 적록색약 시야
-        visited = new boolean[n][n];
-        int blindCount = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+        // 적록색약
+        visited = new boolean[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
                 if (!visited[i][j]) {
-                    bfs(i, j, blind);
-                    blindCount++;
+                    if (rgbMap[i][j] == 'R') bfs(i, j, 'R', rgbMap);
+                    else bfs(i, j, 'B', rgbMap);
+                    rgb++;
                 }
             }
         }
 
-        System.out.println(normalCount + " " + blindCount);
+        System.out.println(origin + " " + rgb);
     }
 
-    static void bfs(int i, int j, char[][] grid) {
+    static void bfs(int i, int j, char target, char[][] targetMap) {
         Queue<int[]> q = new LinkedList<>();
+        q.add(new int[]{i, j});
         visited[i][j] = true;
-        char color = grid[i][j];
-        q.offer(new int[]{i, j});
 
         while (!q.isEmpty()) {
-            int[] curr = q.poll();
-            int x = curr[0], y = curr[1];
+            int[] cur = q.poll();
+            int x = cur[0];
+            int y = cur[1];
 
-            for (int dir = 0; dir < 4; dir++) {
-                int nx = x + dx[dir];
-                int ny = y + dy[dir];
+            for (int d = 0; d < 4; d++) {
+                int nx = x + dx[d];
+                int ny = y + dy[d];
 
-                if (nx < 0 || ny < 0 || nx >= n || ny >= n) continue;
+                if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
+                if (targetMap[nx][ny] != target) continue;
                 if (visited[nx][ny]) continue;
 
-                if (grid[nx][ny] != color) continue;
                 visited[nx][ny] = true;
-                q.offer(new int[]{nx, ny});
+                q.add(new int[]{nx, ny});
             }
         }
     }
+
 }
