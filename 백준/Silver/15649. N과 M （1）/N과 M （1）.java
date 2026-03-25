@@ -16,7 +16,7 @@ public class Main {
         M = Integer.parseInt(st.nextToken());
         nums = new int[N];
         visited = new boolean[N];
-        result = new int[N];
+        result = new int[M];
 
         for (int i = 1; i <= N; i++) {
             nums[i - 1] = i;
