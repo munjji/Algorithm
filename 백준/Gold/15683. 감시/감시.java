@@ -23,7 +23,7 @@ public class Main {
 
     // CCTV 타입별 가능한 방향 조합
     static final int[][][] DIRS = {
-            {}, // 0번
+            {},                                     // 0번: 아무것도 아님
             { {0}, {1}, {2}, {3} },                 // 1번: 4방향 중 1개
             { {0,2}, {1,3} },                       // 2번: 마주보는 2방향 (2가지)
             { {0,1}, {1,2}, {2,3}, {3,0} },         // 3번: 직각 (4가지)
@@ -44,9 +44,9 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < M; j++) {
                 map[i][j] = Integer.parseInt(st.nextToken());
-                int v = map[i][j];
-                if (v >= 1 && v <= 5) {
-                    cctvs.add(new CCTV(i, j, v));
+                int type = map[i][j];
+                if (type >= 1 && type <= 5) {
+                    cctvs.add(new CCTV(i, j, type));
                 }
             }
         }
@@ -66,6 +66,7 @@ public class Main {
 
         for (int[] dirs : DIRS[type]) {
             int[][] next = copy(cur);
+            
             for (int d : dirs) {
                 watch(next, cctv.x, cctv.y, d);
             }
@@ -74,24 +75,24 @@ public class Main {
         }
     }
 
-    static void watch(int[][] b, int x, int y, int dir) {
+    static void watch(int[][] next, int x, int y, int dir) {
         int nx = x + dx[dir];
         int ny = y + dy[dir];
 
         while (0 <= nx && nx < N && 0 <= ny && ny < M) {
-            if (b[nx][ny] == 6) break;       // 벽
-            if (b[nx][ny] == 0) b[nx][ny] = -1; // 빈칸이면 감시표시
+            if (next[nx][ny] == 6) break;             // 벽
+            if (next[nx][ny] == 0) next[nx][ny] = -1; // 빈칸이면 감시표시
 
             nx += dx[dir];
             ny += dy[dir];
         }
     }
 
-    static int countBlind(int[][] b) {
+    static int countBlind(int[][] next) {
         int cnt = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
-                if (b[i][j] == 0) cnt++;
+                if (next[i][j] == 0) cnt++;
             }
         }
 
