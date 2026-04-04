@@ -18,7 +18,7 @@ public class Main {
         }
     }
 
-    static int V, E;
+    static int n, m;
     static List<Node>[] graph;
     static int[] dist;
     static int[] parent;
@@ -27,14 +27,15 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        V = Integer.parseInt(br.readLine().trim());
-        E = Integer.parseInt(br.readLine().trim());
+        n = Integer.parseInt(br.readLine());
+        m = Integer.parseInt(br.readLine());
 
-        graph = new ArrayList[V + 1];
-        for (int i = 1; i <= V; i++) {
+        graph = new ArrayList[n + 1];
+        for (int i = 1; i <= n; i++) {
             graph[i] = new ArrayList<>();
         }
-        for (int i = 0; i < E; i++) {
+
+        for (int i = 0; i < m; i++) {
             st = new StringTokenizer(br.readLine());
             int from = Integer.parseInt(st.nextToken());
             int to = Integer.parseInt(st.nextToken());
@@ -49,8 +50,8 @@ public class Main {
 
         dijkstra(start);
 
-        System.out.println(dist[end]);
-
+        StringBuilder sb = new StringBuilder();
+        sb.append(dist[end] + "\n");
         List<Integer> path = new ArrayList<>();
         int cur = end;
         while (cur != 0) {
@@ -59,32 +60,34 @@ public class Main {
         }
 
         Collections.reverse(path);
-        System.out.println(path.size());
-        for (Integer p: path) {
-            System.out.print(p + " ");
+        sb.append(path.size() + "\n");
+        for (int node : path) {
+            sb.append(node + " ");
         }
+
+        System.out.print(sb.toString());
     }
 
-    static void dijkstra(int start) {
-        dist = new int[V + 1];
-        parent = new int[V + 1];
+    private static void dijkstra(int start) {
+        dist = new int[n + 1];
+        parent = new int[n + 1];
         Arrays.fill(dist, Integer.MAX_VALUE);
 
-        PriorityQueue<Node> pq = new PriorityQueue<>();
+        PriorityQueue<Node> q = new PriorityQueue<>();
         dist[start] = 0;
         parent[start] = 0;
-        pq.add(new Node(start, 0));
+        q.add(new Node(start, 0));
 
-        while (!pq.isEmpty()) {
-            Node cur = pq.poll();
+        while (!q.isEmpty()) {
+            Node cur = q.poll();
 
             if (dist[cur.to] < cur.cost) continue;
 
             for (Node next : graph[cur.to]) {
-                if (dist[next.to] > dist[cur.to] + next.cost) {
+                if (dist[cur.to] + next.cost < dist[next.to]) {
                     dist[next.to] = dist[cur.to] + next.cost;
                     parent[next.to] = cur.to;
-                    pq.add(new Node(next.to, dist[next.to]));
+                    q.add(new Node(next.to, dist[next.to]));
                 }
             }
         }
