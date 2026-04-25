@@ -3,11 +3,11 @@ import java.util.*;
 
 public class Main {
 
-    static int N, M;
-    static List<int[]> homes = new ArrayList<>();
+    static int N, M; // M 치킨집 개수
     static List<int[]> chickens = new ArrayList<>();
+    static List<int[]> homes = new ArrayList<>();
     static int[] selected;
-    static int minAnswer = Integer.MAX_VALUE;
+    static int answer = Integer.MAX_VALUE;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,21 +19,21 @@ public class Main {
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < N; j++) {
-                int val = Integer.parseInt(st.nextToken());
-                if (val == 1) {
+                int info = Integer.parseInt(st.nextToken());
+                if (info == 1) {
                     homes.add(new int[]{i, j});
-                } else if (val == 2) {
+                } else if (info == 2) {
                     chickens.add(new int[]{i, j});
                 }
             }
         }
 
         selected = new int[M];
-        comb(0, 0);
-        System.out.println(minAnswer);
+        dfs(0, 0);
+        System.out.print(answer);
     }
 
-    static void comb (int depth, int start) {
+    static void dfs(int depth, int start) {
         if (depth == M) {
             calcChickenDist();
             return;
@@ -41,7 +41,7 @@ public class Main {
 
         for (int i = start; i < chickens.size(); i++) {
             selected[depth] = i;
-            comb(depth + 1, i + 1);
+            dfs(depth + 1, i + 1);
         }
     }
 
@@ -49,24 +49,25 @@ public class Main {
         int sum = 0;
 
         for (int[] home : homes) {
-            int hx = home[0];
-            int hy = home[1];
+            int home_x = home[0];
+            int home_y = home[1];
 
             int distMin = Integer.MAX_VALUE;
 
-            for (int i = 0; i < M; i++) {
-                int cIdx = selected[i];
-                int[] chicken = chickens.get(cIdx);
-                int cx = chicken[0];
-                int cy = chicken[1];
+            for (int idx : selected) {
+                int[] chicken = chickens.get(idx);
+                int chicken_x = chicken[0];
+                int chicken_y = chicken[1];
 
-                int dist = Math.abs(hx - cx) + Math.abs(hy - cy);
-                distMin = Math.min(dist, distMin);
+                int diff_x = Math.abs(home_x - chicken_x);
+                int diff_y = Math.abs(home_y - chicken_y);
+                int diff = diff_x + diff_y;
+
+                distMin = Math.min(distMin, diff);
             }
-
             sum += distMin;
         }
 
-        minAnswer = Math.min(minAnswer, sum);
+        answer = Math.min(answer, sum);
     }
 }
