@@ -9,9 +9,9 @@ class Solution {
         
         HashSet<Integer> set = new HashSet<>();
         
-        for (int i = 0; i < N; i++) {
-            if (!set.contains(nums[i])) {
-                set.add(nums[i]);
+        for (int num : nums) {
+            if (!set.contains(num)) {
+                set.add(num);
                 answer++;
             }
         }
