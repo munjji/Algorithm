@@ -1,19 +1,23 @@
 import java.util.*;
-import java.io.*;
 
 class Solution {
     public int[] solution(int[] array, int[][] commands) {
         int[] answer = new int[commands.length];
         
         List<Integer> list = new ArrayList<>();
-        for (int num : array) {
-            list.add(num); 
-        }
-                
-        for (int i = 0; i < commands.length; i++) {
-            List<Integer> subList = new ArrayList<>(list.subList(commands[i][0] - 1, commands[i][1]));
-            Collections.sort(subList);
-            answer[i] = subList.get(commands[i][2] - 1);
+        
+        for (int t = 0; t < commands.length; t++) {
+            int i = commands[t][0];
+            int j = commands[t][1];
+            int k = commands[t][2];
+            
+            for (int idx = i - 1; idx < j; idx++) {
+                list.add(array[idx]);
+            }
+            
+            Collections.sort(list);
+            answer[t] = list.get(k - 1);
+            list.clear();
         }
         
         return answer;
