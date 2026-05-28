@@ -1,11 +1,12 @@
 import java.util.*;
 
 class Solution {
-    int answer = 0;
-    boolean[] visited;
+    static int answer = 0;
+    static int number;
+    static boolean[] visited;
     
     public int solution(int k, int[][] dungeons) {
-        int number = dungeons.length;
+        number = dungeons.length;
         visited = new boolean[number];
         
         dfs(k, dungeons, 0);
@@ -16,7 +17,7 @@ class Solution {
     private void dfs (int current, int[][] dungeons, int count) {
         answer = Math.max(answer, count);
         
-        for (int i = 0; i < dungeons.length; i++) {
+        for (int i = 0; i < number; i++) {
             int need = dungeons[i][0];
             int minus = dungeons[i][1];
             
