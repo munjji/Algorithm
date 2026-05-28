@@ -1,10 +1,14 @@
 import java.util.*;
 
 class Solution {
-    static ArrayList<Integer>[] lists;
+    
+    static List<Integer>[] lists;
+    static int n;
+    
     public int solution(int n, int[][] wires) {
         int answer = Integer.MAX_VALUE;
         lists = new ArrayList[n + 1];
+        this.n = n;
         
         for (int i = 1; i <= n; i++) {
             lists[i] = new ArrayList<>();
@@ -25,8 +29,8 @@ class Solution {
             lists[start].remove(Integer.valueOf(end));
             lists[end].remove(Integer.valueOf(start));
             
-            int start_cnt = bfs(start, n);
-            int end_cnt = bfs(end, n);
+            int start_cnt = bfs(start); // 시작 지점에서 이어진 wire 개수 세기
+            int end_cnt = bfs(end); // 끝 지점에서 이어진 wire 개수 세기
             
             answer = Math.min(answer, Math.abs(start_cnt - end_cnt));
             
@@ -37,19 +41,22 @@ class Solution {
         return answer;
     }
     
-    private int bfs (int start, int n) {
+    private int bfs (int start) {
         int cnt = 0;
+        
         boolean[] visited = new boolean[n + 1];
         visited[start] = true;
         Queue<Integer> q = new LinkedList<>();
         q.offer(start);
         
         while(!q.isEmpty()) {
-            int now = q.poll();
+            int cur = q.poll();
             
-            for (int i = 0; i < lists[now].size(); i++) {
-                int next = lists[now].get(i);
+            for (int i = 0; i < lists[cur].size(); i++) {
+                int next = lists[cur].get(i);
+                
                 if (visited[next]) continue;
+                
                 cnt++;
                 visited[next] = true;
                 q.offer(next);
