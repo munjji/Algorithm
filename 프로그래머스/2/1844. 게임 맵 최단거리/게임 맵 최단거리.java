@@ -1,37 +1,49 @@
 import java.util.*;
 
 class Solution {
-    private static final int[] dx = {0, 0, 1, -1};
-    private static final int[] dy = {1, -1, 0, 0};
+    
+    static int n, m;
+    static boolean[][] visited;
+    static final int[] dx = {1, -1, 0, 0};
+    static final int[] dy = {0, 0, 1, -1};
+    
     public int solution(int[][] maps) {
-        int n = maps.length;
-        int m = maps[0].length;
+        n = maps.length;
+        m = maps[0].length;
+        visited = new boolean[n][m];
         
-        boolean[][] visited = new boolean[n][m];
-        Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[]{0, 0, 1});
-        visited[0][0] = true;
+        int answer = bfs(maps, 0, 0);
+        return answer;
+    }
+    
+    static private int bfs (int[][] maps, int i, int j) {
+        visited[i][j] = true;
+        Queue<int[]> q = new LinkedList<>();
+        q.offer(new int[]{i, j, 1});
         
-        while (!queue.isEmpty()) {
-            int[] current = queue.poll();
-            int x = current[0];
-            int y = current[1];
-            int cnt = current[2];
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+            int cx = cur[0];
+            int cy = cur[1];
+            int cnt = cur[2];
             
-            if (x == n-1 && y == m-1) {
+            if (cx == n - 1 && cy == m - 1) {
                 return cnt;
             }
             
-            for (int i = 0; i < 4; i++) {
-                int nx = x + dx[i];
-                int ny = y + dy[i];
+            for (int d = 0; d < 4; d++) {
+                int sx = cx + dx[d];
+                int sy = cy + dy[d];
                 
-                if (nx >= 0 && ny >= 0 && nx < n && ny < m && maps[nx][ny] == 1 && !visited[nx][ny]) {
-                    visited[nx][ny] = true;
-                    queue.add(new int[]{nx, ny, cnt + 1});
-                }
+                if (sx < 0 || sy < 0 || sx >= n || sy >= m) continue;
+                if (visited[sx][sy]) continue;
+                if (maps[sx][sy] == 0) continue;
+                
+                visited[sx][sy] = true;
+                q.offer(new int[]{sx, sy, cnt + 1});
             }
         }
+        
         return -1;
     }
 }
