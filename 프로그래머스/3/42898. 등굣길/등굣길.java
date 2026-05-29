@@ -1,5 +1,3 @@
-// 오른쪽, 아래쪽으로만 움직일 수 있음
-
 import java.util.*;
 
 class Solution {
@@ -23,8 +21,8 @@ class Solution {
                     continue;
                 }
 
-                if (i > 1) dp[i][j] += dp[i - 1][j] % MOD;
-                if (j > 1) dp[i][j] += dp[i][j - 1] % MOD;
+                if (i > 1) dp[i][j] += dp[i - 1][j];
+                if (j > 1) dp[i][j] += dp[i][j - 1];
                 
                 dp[i][j] %= MOD;
             }
