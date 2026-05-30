@@ -1,7 +1,7 @@
 class Solution {
     public int solution(int n, int[][] results) {
         int answer = 0;
-        boolean[][] win = new boolean[n+1][n+1];
+        boolean[][] win = new boolean[n + 1][n + 1];
         
         for (int[] result: results) {
             int a = result[0];
